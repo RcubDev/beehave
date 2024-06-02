@@ -29,8 +29,9 @@
 
 #include "beehave_tree.h"
 #include "beehave_blackboard.h"
-#include <core/class_db.hpp>
+#include "godot_cpp/classes/engine.hpp"
 #include "variant/utility_functions.hpp"
+#include <core/class_db.hpp>
 
 using namespace godot;
 
@@ -93,28 +94,33 @@ void BeehaveTree::_ready() {
 }
 
 void BeehaveTree::_process(double delta) {
+	if (Engine::get_singleton()->is_editor_hint()) {
+		return;
+	}
 	if (process_thread == BeehaveTree::ProcessThread::IDLE) {
 		process_internally(delta);
 	}
 }
 
 void BeehaveTree::_physics_process(double delta) {
+	if (Engine::get_singleton()->is_editor_hint()) {
+		return;
+	}
 	if (process_thread == BeehaveTree::ProcessThread::PHYSICS) {
 		process_internally(delta);
 	}
 }
 
-void BeehaveTree::set_actor(Node* actor) {
+void BeehaveTree::set_actor(Node *actor) {
 	this->actor = actor;
 }
 
-Node* BeehaveTree::get_actor() const {
+Node *BeehaveTree::get_actor() const {
 	return actor;
 }
 
 void BeehaveTree::set_blackboard(BeehaveBlackboard *blackboard) {
 	this->blackboard = blackboard;
-	
 }
 
 BeehaveBlackboard *BeehaveTree::get_blackboard() const {
